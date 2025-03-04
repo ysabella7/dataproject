@@ -1,0 +1,17 @@
+# Read the CSV file
+df = pd.read_csv('your_file.csv')  # Replace with your actual file path
+
+# Check data types of columns 2-5 (note: pandas uses 0-based indexing)
+print("Original Data Types:")
+print(df.iloc[:, 1:5].dtypes)
+
+# Convert columns 2-5 to float
+# We'll use pd.to_numeric() with error handling to deal with potential non-numeric values
+df.iloc[:, 1:5] = df.iloc[:, 1:5].apply(pd.to_numeric, errors='coerce')
+
+# Verify the new data types
+print("\nUpdated Data Types:")
+print(df.iloc[:, 1:5].dtypes)
+
+# Optional: Save the modified DataFrame back to a CSV if needed
+# df.to_csv('modified_file.csv', index=False)
