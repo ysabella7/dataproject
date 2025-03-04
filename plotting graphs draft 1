@@ -71,7 +71,7 @@ scatter_plot.show()
 
 
 
-app = Flask(irish_tax_stats)
+app = Flask(__name__)
 
 # Routes
 @app.route('/')
@@ -83,5 +83,5 @@ def index():
         scatter_chart=scatter_plot_html
         )
 
-if irish_tax_stats == '__main__':
-    app. run (host='0.0.0.0', port=5001, debug=False)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=False)
