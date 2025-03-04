@@ -1,0 +1,9 @@
+# Read the CSV file
+df = pd.read_csv('your_file.csv', 
+                 # Convert columns 2-5 (index 1-4) to float
+                 dtype={
+                     1: float,  # Column 2
+                     2: float,  # Column 3
+                     3: float,  # Column 4
+                     4: float   # Column 5
+                 })
