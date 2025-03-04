@@ -1,0 +1,30 @@
+import pandas as pd
+import numpy as np
+
+# Read the CSV file
+df = pd.read_csv('your_file.csv')  # Replace with your actual file path
+
+# Calculate statistical measures for each column
+# We'll demonstrate for numeric columns, use select_dtypes to ensure we only use numeric columns
+numeric_columns = df.select_dtypes(include=[np.number])
+
+# Calculate and store statistical measures
+column_stats = {}
+for column in numeric_columns.columns:
+    column_stats[column] = {
+        'mean': numeric_columns[column].mean(),
+        'median': numeric_columns[column].median(),
+        'mode': numeric_columns[column].mode().values[0],  # First mode if multiple exist
+        'range': numeric_columns[column].max() - numeric_columns[column].min()
+    }
+
+# Print the results (optional)
+for col, stats in column_stats.items():
+    print(f"\nStatistics for {col}:")
+    print(f"Mean: {stats['mean']}")
+    print(f"Median: {stats['median']}")
+    print(f"Mode: {stats['mode']}")
+    print(f"Range: {stats['range']}")
+
+# If you want to access these later in your code, you can use:
+# For example: column_stats['column_name']['mean']
