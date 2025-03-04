@@ -1,0 +1,2 @@
+# remove duplicate row 
+df.drop_duplicates(inplace=True)
