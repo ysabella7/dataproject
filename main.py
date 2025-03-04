@@ -33,3 +33,29 @@ print(data.dtypes)
 column_name = data.columns[1]  # Get the second column name
 data[column_name] = pd.to_numeric(data[column_name], errors='coerce')
 
+# Print to check conversion
+print(data.dtypes)  # Verify data types
+print(data.head())   # Check the first few rows
+
+# Save back to CSV
+data.to_csv('cleandata_fixed.csv', index=False)
+
+'''
+# load the CSV file
+df = pd.read_csv("cleandata.csv")
+
+# select only the last three columns (ignore the first numeric column)
+data = df.iloc[:, 1:]  # This selects all rows but only columns 2, 3, and 4
+
+# calculate mean, median, mode, and range
+mean_values = data.mean()
+median_values = data.median()
+mode_values = data.mode().iloc[0]  # mode() can return multiple values, take the first
+range_values = data.max() - data.min()
+
+# print the results
+print("Mean:\n", mean_values)
+print("\nMedian:\n", median_values)
+print("\nMode:\n", mode_values)
+print("\nRange:\n", range_values)
+'''
