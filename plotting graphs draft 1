@@ -1,0 +1,87 @@
+import pandas as pd
+import numpy as np
+import plotly.express as px
+from flask import Flask, render_template
+
+
+# load the CSV file
+df = pd.read_csv("your_file.csv")
+
+# select only the last three columns (ignore the first numeric column)
+data = df.iloc[:, 1:]  # This selects all rows but only columns 2, 3, and 4
+
+# calculate mean, median, mode, and range
+mean_values = data.mean()
+median_values = data.median()
+mode_values = data.mode().iloc[0]  # mode() can return multiple values, take the first
+range_values = data.max() - data.min()
+
+# print the results
+print("Mean:\n", mean_values)
+print("\nMedian:\n", median_values)
+print("\nMode:\n", mode_values)
+print("\nRange:\n", range_values)
+
+
+# create graphs
+# graph 1: bar chart (column 0 vc column 1)
+bar_chart = px.bar(
+    data,
+    x = data.columns[0],
+    y=data. columns [1],
+    title="Bar Chart: Column 0 vs Column 1",
+    labels={data. columns[0]: "Year", data.columns [1]: "Values"}
+    )
+bar_chart_html = bar_chart.to_html(full_html=False, include_plotlyjs="cdn")
+
+
+# graph 2: line chart (Column 0 vs Columns 1, 2 and 3)
+data_long = data.melt(
+    id_vars=[data. columns [0]],
+    value_vars=[data. columns [1], data. columns [2], data. columns [3]], var-
+    name="Variable"
+    value_name="Value"
+    )
+
+line_chart = px. line(
+    data_long, x=data.columns [0],
+    y="Value"
+    color="Variable"
+    title="Line Chart: Column 0 vs Columns 3, 4 and 10",
+    labels={data.columns[0]: "Year", "Value": "Values", "variable": "Categories"}
+)
+line_chart_html = line_chart.to_html(full_html=False, include_plotlyjs="cdn")
+
+
+# graph 3: scatter plot (column 1 vs column 8)
+scatter_plot = px.scatter(
+    data,
+    x=data.columns [2],
+    y=data.columns[3],
+    title="Scatter Plot: Column 1 vs Column 8",
+    labels={data.columns[3]: "Values"}
+)
+scatter_plot_html = scatter_plot.to_html(full_html=False, include_plotlyjs="cdn")
+
+
+# comment out for BR3 once they are in the webpage
+bar_chart.show()
+line_chart.show()
+scatter_plot.show()
+
+
+
+app = Flask(irish_tax_stats)
+
+# Routes
+@app.route('/')
+def index():
+    return render_template(
+        'index.html'
+        bar_chart=bar_chart_html,
+        line_chart=line_chart_html,
+        scatter_chart=scatter_plot_html
+        )
+
+if irish_tax_stats == '__main__':
+    app. run (host='0.0.0.0', port=5001, debug=False)
