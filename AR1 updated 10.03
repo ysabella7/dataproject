@@ -16,15 +16,20 @@ data = pd.read_csv(file_path, encoding="windows-1252", na_values=['NaN', ''])
 
 # read the file using pandas and remove special characters (€)
 #data = pd.read.csv(file_path)
-data = data.replace({'€': ' '}, regex = True)
+#data = data.replace({'€': ' '}, regex = True)
+data = data.replace({'€': '', ',': ''}, regex=True)
+
+
+# remove any duplicate rows
+data.drop_duplicates(inplace=True)
 
 # drop and delete rows with missing data
 data = data.dropna()
 
 # fill this in
-numeric_cols = ['corporation_tax','capital_acq','capital_gains','employees_prsi','vat']
+numeric_cols = ["corporation_tax", "capital_acq", "capital_gains", "employees_prsi", "vat"]
 for col in numeric_cols:
-  data[col] = pd.to_numeric(data[col], errors='coerce')
+    data[col] = pd.to_numeric(data[col], errors="coerce")  # Convert to numbers
 
 # save cleaned data to a new file
 cleaned_file_path = 'cleandata.csv'
@@ -32,7 +37,9 @@ data.to_csv(cleaned_file_path, index = False)
 
 print("I saved the clean file here:", cleaned_file_path)
 
-print(data["corporation_tax"].unique())  # See unique values in the column
+# print(data["corporation_tax"].unique())  # See unique values in the column
+
+
 ## BR 2 ##
 # define non numeric columns 
 non_numeric_cols = ['Year']
@@ -54,7 +61,7 @@ for col in data.columns: # go through each column but skip first column
 # to view the dictionary 
 # print(stats_dictionary)
 
-# convert stats to DataFrame so it looks nicer when printed
+# convert stats to DataFrame
 stats_df = pd.DataFrame(stats_dictionary).transpose()
 print(stats_df)
 
@@ -85,25 +92,31 @@ bar_chart = px.bar(
     )
 '''
 
-data_long = data.melt(id_vars=["Year"], value_vars=["corporation_tax", "capital_acq"], 
-                      var_name="Tax Type", value_name="Value")
+#graph 1: bar chart of corporation tax and capital gains
+data_long = data.melt(
+    id_vars=["Year"], 
+    value_vars=["corporation_tax", "capital_gains"],  # Use capital_gains instead
+    var_name="Tax Type", 
+    value_name="Value"
+)
 
 bar_chart = px.bar(
     data_long,
     x="Year",
     y="Value",
     color="Tax Type",
-    title="Corporation Tax vs Capital Acquisitions Tax Over Time",
+    title="Corporation Tax vs Capital Gains Tax Over Time",
     labels={"Year": "Year", "Value": "Tax in € million", "Tax Type": "Tax Type"}
 )
 
-# graph 2: line chart (Column 0 vs Columns 1, 2, 3, and 4)
+# graph 2: line chart of all data columns
+
 data_long = data.melt(
-    id_vars=[data.columns[0]],
-    value_vars=[data.columns[1], data.columns[2], data.columns[3], data.columns[4], data.columns[5]],
+    id_vars=["Year"],  
+    value_vars=["corporation_tax", "capital_acq", "capital_gains", "employees_prsi", "vat"],
     var_name="Variable",
     value_name="Value",
-    )
+)
 
 line_chart = px.line(
     data_long, 
@@ -115,6 +128,7 @@ line_chart = px.line(
     )
     
 line_chart_html = line_chart.to_html(full_html=False, include_plotlyjs="cdn")
+# print("Columns in DataFrame:", data.columns.tolist())
 
 # graph 3: scatter plot (column 3 vs column 4)
 scatter_plot = px.scatter(
@@ -154,3 +168,4 @@ def suggestions():
                     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=False)
+    #     app.run(host='127.0.0.1', port=5001)
